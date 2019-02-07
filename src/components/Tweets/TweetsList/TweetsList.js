@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { interval, merge } from "rxjs";
-import { Card, Button } from "element-react";
+import { Card, Button, Tabs } from "element-react";
 import moment from "moment";
 import { map } from "rxjs/operators";
 import "element-theme-default";
@@ -64,51 +64,84 @@ export class TweetsListComponent extends Component {
     } else {
       return (
         <div>
-          <p>liked tweets counter:{likedTweets.length}</p>
-          {descSortedTweets.map((tweet, index) => {
-            return (
-              <Card bodyStyle={{ padding: 0 }}>
-                <div
-                  style={{
-                    backgroundColor: likedTweets.includes(tweet)
-                      ? "#E8E8E8"
-                      : "",
-                    padding: 8
-                  }}
-                >
-                  <span>{tweet.account}</span>
-                  <br />
-                  <span>{tweet.content}</span>
-                  <div className="bottom clearfix">
-                    <time className="time">
-                      {moment(tweet.timestamp).format()}
-                    </time>
-                  </div>
-                  <div>
-                    {likedTweets.includes(tweet) ? (
-                      <Button
-                        onClick={() => this.unLike(tweet)}
-                        type="text"
-                        size="large"
-                        className="button"
-                      >
-                        <i class="el-icon-star-on" />
-                      </Button>
-                    ) : (
-                      <Button
-                        onClick={() => this.like(tweet)}
-                        type="text"
-                        size="large"
-                        className="button"
-                      >
-                        <i class="el-icon-star-off" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
+          <Tabs activeName="1" onTabClick={tab => console.log(tab.props.name)}>
+            <Tabs.Pane label="All Tweets" name="1">
+              <p>liked tweets counter:{likedTweets.length}</p>
+              {descSortedTweets.map((tweet, index) => {
+                return (
+                  <Card bodyStyle={{ padding: 0 }}>
+                    <div
+                      style={{
+                        backgroundColor: likedTweets.includes(tweet)
+                          ? "#E8E8E8"
+                          : "",
+                        padding: 8
+                      }}
+                    >
+                      <span>{tweet.account}</span>
+                      <br />
+                      <span>{tweet.content}</span>
+                      <div className="bottom clearfix">
+                        <time className="time">
+                          {moment(tweet.timestamp).format()}
+                        </time>
+                      </div>
+                      <div>
+                        {likedTweets.includes(tweet) ? (
+                          <Button
+                            onClick={() => this.unLike(tweet)}
+                            type="text"
+                            size="large"
+                            className="button"
+                          >
+                            <i class="el-icon-star-on" />
+                          </Button>
+                        ) : (
+                          <Button
+                            onClick={() => this.like(tweet)}
+                            type="text"
+                            size="large"
+                            className="button"
+                          >
+                            <i class="el-icon-star-off" />
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </Tabs.Pane>
+            <Tabs.Pane label="liked Tweets" name="2">
+              <p>liked tweets counter:{likedTweets.length}</p>
+              {likedTweets.map((tweet, index) => {
+                return (
+                  <Card bodyStyle={{ padding: 0 }}>
+                    <div style={{ padding: 8 }}>
+                      <span>{tweet.account}</span>
+                      <br />
+                      <span>{tweet.content}</span>
+                      <div className="bottom clearfix">
+                        <time className="time">
+                          {moment(tweet.timestamp).format()}
+                        </time>
+                      </div>
+                      <div>
+                        <Button
+                          onClick={() => this.unLike(tweet)}
+                          type="text"
+                          size="large"
+                          className="button"
+                        >
+                          <i class="el-icon-star-on" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            </Tabs.Pane>
+          </Tabs>
         </div>
       );
     }
