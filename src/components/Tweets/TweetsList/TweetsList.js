@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { interval, merge } from "rxjs";
-import {Card} from "element-react"
-import moment from "moment"
+import { Card } from "element-react";
+import moment from "moment";
 import { map } from "rxjs/operators";
 
 export class TweetsListComponent extends Component {
@@ -34,29 +34,40 @@ export class TweetsListComponent extends Component {
   }
 
   render() {
-      const { tweets } = this.state;
-    return (
-            <div>
-            {tweets.map((tweet) => {
-                return (
-                  <Card bodyStyle={{ padding: 0 }}>
-                    <div style={{ padding: 8 }}>
-                      <span>{tweet.account}</span>
-                      <br />
-                      <span>{tweet.content}</span>
-                      <div className="bottom clearfix">
-                        <time className="time">
-                          {moment(tweet.timestamp).format()}
-                        </time>
-                      </div>
-                      <div>
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
+    const { tweets } = this.state;
+    const descSortedTweets = [
+      ...tweets.sort((a, b) => a.timestamp < b.timestamp)
+    ];
+
+    if (tweets.length === 0) {
+      return (
+        <div>
+          <h1>no tweets available</h1>{" "}
+        </div>
+      );
+    } else {
+      return (
+        <div>
+          {descSortedTweets.map((tweet, index) => {
+            return (
+              <Card bodyStyle={{ padding: 0 }}>
+                <div key={index} style={{ padding: 8 }}>
+                  <span>{tweet.account}</span>
+                  <br />
+                  <span>{tweet.content}</span>
+                  <div className="bottom clearfix">
+                    <time className="time">
+                      {moment(tweet.timestamp).format()}
+                    </time>
+                  </div>
+                  <div />
+                </div>
+              </Card>
             );
+          })}
+        </div>
+      );
+    }
   }
 }
 
