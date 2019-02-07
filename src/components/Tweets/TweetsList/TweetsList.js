@@ -3,6 +3,7 @@ import { interval, merge } from "rxjs";
 import { Card } from "element-react";
 import moment from "moment";
 import { map } from "rxjs/operators";
+import "element-theme-default";
 
 export class TweetsListComponent extends Component {
   constructor(props) {
@@ -28,9 +29,13 @@ export class TweetsListComponent extends Component {
       createTweetSource(5000, "CommitStrip", "Funny")
     );
 
-    tweets.subscribe(tweet => {
-      this.setState({ tweets: [...this.state.tweets, tweet] });
-    });
+    tweets.subscribe(tweet =>
+        this.setState({ tweets: [...this.state.tweets, tweet] }, () => {
+          setTimeout(() => {
+            this.setState({ tweets: this.state.tweets.filter(i => i !== tweet) });
+          }, 30000);
+        })
+      );
   }
 
   render() {
