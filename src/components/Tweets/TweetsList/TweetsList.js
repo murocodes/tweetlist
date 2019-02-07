@@ -23,6 +23,13 @@ export class TweetsListComponent extends Component {
       likedTweets: [...this.state.likedTweets.filter(i => i !== tweet)]
     });
   };
+  deleteAllTweets = () => {
+    this.setState({
+      tweets: [],
+      likedTweets: [],
+      descSortedTweets: []
+    });
+  };
   componentDidMount() {
     const createTweetSource = (frequency, account, attribute) => {
       return interval(frequency).pipe(
@@ -66,6 +73,14 @@ export class TweetsListComponent extends Component {
         <div>
           <Tabs activeName="1" onTabClick={tab => console.log(tab.props.name)}>
             <Tabs.Pane label="All Tweets" name="1">
+              <Button
+                onClick={() => this.deleteAllTweets()}
+                type="primary"
+                size="large"
+                className="button"
+              >
+                delete tweets
+              </Button>
               <p>liked tweets counter:{likedTweets.length}</p>
               {descSortedTweets.map((tweet, index) => {
                 return (
@@ -113,6 +128,14 @@ export class TweetsListComponent extends Component {
               })}
             </Tabs.Pane>
             <Tabs.Pane label="liked Tweets" name="2">
+            <Button
+                onClick={() => this.deleteAllTweets()}
+                type="primary"
+                size="large"
+                className="button"
+              >
+                delete tweets
+              </Button>
               <p>liked tweets counter:{likedTweets.length}</p>
               {likedTweets.map((tweet, index) => {
                 return (
