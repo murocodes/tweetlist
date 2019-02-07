@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { interval, merge } from "rxjs";
-import { Card } from "element-react";
+import { Card, Button } from "element-react";
 import moment from "moment";
 import { map } from "rxjs/operators";
 import "element-theme-default";
@@ -9,9 +9,20 @@ export class TweetsListComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      tweets: []
+      tweets: [],
+      likedTweets: []
     };
   }
+  like = tweet => {
+    this.setState({
+      likedTweets: [...this.state.likedTweets, tweet]
+    });
+  };
+  unLike = tweet => {
+    this.setState({
+      likedTweets: [...this.state.likedTweets.filter(i => i !== tweet)]
+    });
+  };
   componentDidMount() {
     const createTweetSource = (frequency, account, attribute) => {
       return interval(frequency).pipe(
@@ -30,16 +41,16 @@ export class TweetsListComponent extends Component {
     );
 
     tweets.subscribe(tweet =>
-        this.setState({ tweets: [...this.state.tweets, tweet] }, () => {
-          setTimeout(() => {
-            this.setState({ tweets: this.state.tweets.filter(i => i !== tweet) });
-          }, 30000);
-        })
-      );
+      this.setState({ tweets: [...this.state.tweets, tweet] }, () => {
+        setTimeout(() => {
+          this.setState({ tweets: this.state.tweets.filter(i => i !== tweet) });
+        }, 30000);
+      })
+    );
   }
 
   render() {
-    const { tweets } = this.state;
+    const { tweets, likedTweets } = this.state;
     const descSortedTweets = [
       ...tweets.sort((a, b) => a.timestamp < b.timestamp)
     ];
@@ -53,10 +64,18 @@ export class TweetsListComponent extends Component {
     } else {
       return (
         <div>
+          <p>liked tweets counter:{likedTweets.length}</p>
           {descSortedTweets.map((tweet, index) => {
             return (
               <Card bodyStyle={{ padding: 0 }}>
-                <div key={index} style={{ padding: 8 }}>
+                <div
+                  style={{
+                    backgroundColor: likedTweets.includes(tweet)
+                      ? "#E8E8E8"
+                      : "",
+                    padding: 8
+                  }}
+                >
                   <span>{tweet.account}</span>
                   <br />
                   <span>{tweet.content}</span>
@@ -65,7 +84,27 @@ export class TweetsListComponent extends Component {
                       {moment(tweet.timestamp).format()}
                     </time>
                   </div>
-                  <div />
+                  <div>
+                    {likedTweets.includes(tweet) ? (
+                      <Button
+                        onClick={() => this.unLike(tweet)}
+                        type="text"
+                        size="large"
+                        className="button"
+                      >
+                        <i class="el-icon-star-on" />
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => this.like(tweet)}
+                        type="text"
+                        size="large"
+                        className="button"
+                      >
+                        <i class="el-icon-star-off" />
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </Card>
             );
